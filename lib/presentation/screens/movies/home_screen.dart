@@ -32,7 +32,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    // final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final moviesSlideshow = ref.watch(moviesSlideshowProvider);
     return Column(
       children: [
@@ -45,6 +45,20 @@ class _HomeViewState extends ConsumerState<_HomeView> {
               );
             }
             return MoviesSlideshow(movies: moviesSlideshow);
+          },
+        ),
+        Builder(
+          builder: (context) {
+            if (nowPlayingMovies.isEmpty) {
+              return DecoratedBox(
+                decoration: BoxDecoration(color: colors.primary),
+              );
+            }
+            return MoviesHorizontalListview(
+              movies: nowPlayingMovies,
+              title: 'En cines',
+              subTitle: 'Lunes 20 de marzo',
+            );
           },
         ),
       ],
