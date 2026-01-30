@@ -1,6 +1,7 @@
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/dates_moviedb.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/movie_moviedb.dart';
 
+// * Como vienen los datos de la API externa
 class MovieDbResponse {
   final DatesFromMovieDB? dates;
   final int page;

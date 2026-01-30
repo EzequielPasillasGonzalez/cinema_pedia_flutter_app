@@ -5,6 +5,7 @@ import 'package:cinema_pedia_app/infrastructure/mappers/movie_mapper.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
 
+// * Interactuan con la api externa
 class ThemoviedbDatasource extends MoviesDatasource {
   final dio = Dio(
     BaseOptions(

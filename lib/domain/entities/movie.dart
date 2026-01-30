@@ -1,3 +1,4 @@
+// * Objetos principales de la aplicacion
 class Movie {
   final bool adult;
   final String backdropPath;

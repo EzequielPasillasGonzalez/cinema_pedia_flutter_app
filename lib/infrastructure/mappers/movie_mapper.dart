@@ -1,6 +1,7 @@
 import 'package:cinema_pedia_app/domain/entities/movie.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/movie_moviedb.dart';
 
+// * transforman datos de un formato a otro
 class MovieMapper {
   static Movie movieDBToEntity(MovieFromMovieDB movieFromMovieDB) => Movie(
     adult: movieFromMovieDB.adult,
