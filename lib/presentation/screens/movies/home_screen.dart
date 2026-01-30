@@ -1,4 +1,5 @@
 import 'package:cinema_pedia_app/presentation/providers/providers.dart';
+import 'package:cinema_pedia_app/presentation/widgets/movies/movies_slideshow.dart';
 import 'package:cinema_pedia_app/presentation/widgets/shared/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,18 +29,20 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     return Column(
       children: [
         CustomAppbar(),
-        Expanded(
-          child: ListView.builder(
-            itemCount: nowPlayingMovies.length,
-            itemBuilder: (context, index) {
-              final movie = nowPlayingMovies[index];
-              return ListTile(title: Text(movie.title));
-            },
-          ),
+        Builder(
+          builder: (context) {
+            if (nowPlayingMovies.isEmpty) {
+              return DecoratedBox(
+                decoration: BoxDecoration(color: colors.primary),
+              );
+            }
+            return MoviesSlideshow(movies: nowPlayingMovies);
+          },
         ),
       ],
     );
