@@ -34,6 +34,40 @@ class NowPlayingMapNotifier extends MoviesNotifier {
 }
 
 final nowPlayingMoviesProvider =
-    NotifierProvider<NowPlayingMapNotifier, List<Movie>>(() {
-      return NowPlayingMapNotifier();
-    });
+    NotifierProvider<NowPlayingMapNotifier, List<Movie>>(
+      () => NowPlayingMapNotifier(),
+    );
+
+class PopularMoviesMapNotifier extends MoviesNotifier {
+  @override
+  Future<List<Movie>> fetchMoreMovies({required int page}) {
+    return ref.read(movieRepositoryProvider).getPopular(page: page);
+  }
+}
+
+final getPopularMoviesProvider =
+    NotifierProvider<PopularMoviesMapNotifier, List<Movie>>(
+      () => PopularMoviesMapNotifier(),
+    );
+
+class TopRatedMapNotifier extends MoviesNotifier {
+  @override
+  Future<List<Movie>> fetchMoreMovies({required int page}) {
+    return ref.read(movieRepositoryProvider).getTopRated(page: page);
+  }
+}
+
+final getTopRatedProvider = NotifierProvider<TopRatedMapNotifier, List<Movie>>(
+  () => TopRatedMapNotifier(),
+);
+
+class UpcomingMapNotifier extends MoviesNotifier {
+  @override
+  Future<List<Movie>> fetchMoreMovies({required int page}) {
+    return ref.read(movieRepositoryProvider).getUpcoming(page: page);
+  }
+}
+
+final getUpcomingProvider = NotifierProvider<UpcomingMapNotifier, List<Movie>>(
+  () => UpcomingMapNotifier(),
+);
