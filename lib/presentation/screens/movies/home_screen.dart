@@ -34,28 +34,29 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
+    //* Carga los datos y muestra una pantalla en lo que espera
+    final isLoading = ref.watch(initialLoadginProvider);
+
+    if (isLoading) return const FullScreenLoader();
+
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final popularMovies = ref.watch(getPopularMoviesProvider);
     final topRatedMovies = ref.watch(getTopRatedProvider);
     final upcomingMovies = ref.watch(getUpcomingProvider);
     final moviesSlideshow = ref.watch(moviesSlideshowProvider);
 
-    return CustomScrollView(
-      slivers: [
-        const SliverAppBar(floating: true, title: CustomAppbar()),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return Column(
-              children: [
-                if (moviesSlideshow.isEmpty)
-                  _LoadingBox(colors: colors)
-                else
+    // * Con visibility no se muestra hasta que cargaron
+    return Visibility(
+      visible: !isLoading,
+      child: CustomScrollView(
+        slivers: [
+          const SliverAppBar(floating: true, title: CustomAppbar()),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Column(
+                children: [
                   MoviesSlideshow(movies: moviesSlideshow),
 
-                if (nowPlayingMovies.isEmpty)
-                  _LoadingBox(colors: colors)
-                else
                   MoviesHorizontalListview(
                     movies: nowPlayingMovies,
                     title: 'En cines',
@@ -65,9 +66,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                         .loadNextPage(),
                   ),
 
-                if (topRatedMovies.isEmpty)
-                  _LoadingBox(colors: colors)
-                else
                   MoviesHorizontalListview(
                     movies: topRatedMovies,
                     title: 'Mejor valoradas',
@@ -76,9 +74,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                         ref.read(getTopRatedProvider.notifier).loadNextPage(),
                   ),
 
-                if (popularMovies.isEmpty)
-                  _LoadingBox(colors: colors)
-                else
                   MoviesHorizontalListview(
                     movies: popularMovies,
                     title: 'Populares',
@@ -87,9 +82,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                         .loadNextPage(),
                   ),
 
-                if (upcomingMovies.isEmpty)
-                  _LoadingBox(colors: colors)
-                else
                   MoviesHorizontalListview(
                     movies: upcomingMovies,
                     title: 'Proximamente',
@@ -98,23 +90,13 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                     loadNextPage: () =>
                         ref.read(getUpcomingProvider.notifier).loadNextPage(),
                   ),
-                const SizedBox(height: 10),
-              ],
-            );
-          }, childCount: 1),
-        ),
-      ],
+                  const SizedBox(height: 10),
+                ],
+              );
+            }, childCount: 1),
+          ),
+        ],
+      ),
     );
-  }
-}
-
-class _LoadingBox extends StatelessWidget {
-  const _LoadingBox({required this.colors});
-
-  final ColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(decoration: BoxDecoration(color: colors.primary));
   }
 }
