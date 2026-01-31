@@ -34,32 +34,75 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final colors = Theme.of(context).colorScheme;
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final moviesSlideshow = ref.watch(moviesSlideshowProvider);
-    return Column(
-      children: [
-        CustomAppbar(),
-        Builder(
-          builder: (context) {
-            if (moviesSlideshow.isEmpty) {
-              return DecoratedBox(
-                decoration: BoxDecoration(color: colors.primary),
-              );
-            }
-            return MoviesSlideshow(movies: moviesSlideshow);
-          },
-        ),
-        Builder(
-          builder: (context) {
-            if (nowPlayingMovies.isEmpty) {
-              return DecoratedBox(
-                decoration: BoxDecoration(color: colors.primary),
-              );
-            }
-            return MoviesHorizontalListview(
-              movies: nowPlayingMovies,
-              title: 'En cines',
-              subTitle: 'Lunes 20 de marzo',
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(floating: true, title: CustomAppbar()),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+                Builder(
+                  builder: (context) {
+                    if (moviesSlideshow.isEmpty) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(color: colors.primary),
+                      );
+                    }
+                    return MoviesSlideshow(movies: moviesSlideshow);
+                  },
+                ),
+                Builder(
+                  builder: (context) {
+                    if (nowPlayingMovies.isEmpty) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(color: colors.primary),
+                      );
+                    }
+                    return Column(
+                      children: [
+                        MoviesHorizontalListview(
+                          movies: nowPlayingMovies,
+                          title: 'En cines',
+                          subTitle: 'Lunes 20 de marzo',
+                          loadNextPage: () => ref
+                              .read(nowPlayingMoviesProvider.notifier)
+                              .loadNextPage(),
+                        ),
+
+                        MoviesHorizontalListview(
+                          movies: nowPlayingMovies,
+                          title: 'Prximamente',
+                          subTitle: 'En este mes',
+                          loadNextPage: () => ref
+                              .read(nowPlayingMoviesProvider.notifier)
+                              .loadNextPage(),
+                        ),
+
+                        MoviesHorizontalListview(
+                          movies: nowPlayingMovies,
+                          title: 'Populares',
+                          loadNextPage: () => ref
+                              .read(nowPlayingMoviesProvider.notifier)
+                              .loadNextPage(),
+                        ),
+
+                        MoviesHorizontalListview(
+                          movies: nowPlayingMovies,
+                          title: 'Mejor valoradas',
+                          subTitle: 'De todos los tiempos',
+                          loadNextPage: () => ref
+                              .read(nowPlayingMoviesProvider.notifier)
+                              .loadNextPage(),
+                        ),
+
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  },
+                ),
+              ],
             );
-          },
+          }, childCount: 1),
         ),
       ],
     );
