@@ -2,8 +2,6 @@ import 'package:cinema_pedia_app/domain/entities/movie.dart';
 import 'package:cinema_pedia_app/presentation/providers/movies/movies_repository_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-typedef MovieCallback = Future<List<Movie>> Function({int page});
-
 abstract class MoviesNotifier extends Notifier<List<Movie>> {
   int currentPage = 0;
   bool isLoadding = false;
