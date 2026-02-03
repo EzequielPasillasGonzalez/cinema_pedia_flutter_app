@@ -1,23 +1,14 @@
 import 'package:cinema_pedia_app/config/finals/enviroment.dart';
 import 'package:cinema_pedia_app/domain/datasources/movies_datasource.dart';
 import 'package:cinema_pedia_app/domain/entities/movie.dart';
+import 'package:cinema_pedia_app/infrastructure/datasources/moviedb_dio.dart';
 import 'package:cinema_pedia_app/infrastructure/mappers/movie_mapper.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/movie_details_moviedb.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/moviedb_response.dart';
-import 'package:dio/dio.dart';
 
 // * Interactuan con la api externa
 class ThemoviedbDatasource extends MoviesDatasource {
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: Enviroment.tMDBBaseUrl,
-      queryParameters: {'language': 'es-Mx'},
-      headers: {
-        'Authorization': 'Bearer ${Enviroment.tMDBKey}',
-        'accept': 'application/json',
-      },
-    ),
-  );
+  final dio = dioMovieDB;
 
   List<Movie> _jsonToMovies(Map<String, dynamic> json) {
     final movieDBResponse = MovieDbResponse.fromJson(json);

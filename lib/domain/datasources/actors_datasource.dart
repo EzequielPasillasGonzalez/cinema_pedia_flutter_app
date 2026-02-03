@@ -1,0 +1,5 @@
+import 'package:cinema_pedia_app/domain/entities/actor.dart';
+
+abstract class ActorsDatasource {
+  Future<List<Actor>> getActorsByMovie(String movieId);
+}
