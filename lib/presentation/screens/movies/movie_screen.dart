@@ -252,21 +252,6 @@ class _Gradiente extends StatelessWidget {
   }
 }
 
-class _SliiverTitle extends StatelessWidget {
-  const _SliiverTitle({required this.movieTitle});
-
-  final String movieTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      movieTitle,
-      style: const TextStyle(fontSize: 20, color: Colors.white),
-      textAlign: TextAlign.start,
-    );
-  }
-}
-
 class _BackgroundImage extends StatelessWidget {
   final String imagePath;
 
@@ -274,6 +259,15 @@ class _BackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(child: Image.network(imagePath, fit: BoxFit.cover));
+    return SizedBox.expand(
+      child: Image.network(
+        imagePath,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress != null) return FullScreenLoader();
+          return FadeIn(child: child);
+        },
+        fit: BoxFit.cover,
+      ),
+    );
   }
 }
