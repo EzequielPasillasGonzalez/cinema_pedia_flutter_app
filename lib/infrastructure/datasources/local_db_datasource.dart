@@ -1,8 +1,9 @@
-import 'package:cinema_pedia_app/infrastructure/database/models/local_movie.dart';
+import 'package:cinema_pedia_app/domain/datasources/local_database_datasource.dart';
+import 'package:cinema_pedia_app/infrastructure/models/database/models/local_movie.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class LocalDbDatasource {
+class LocalDbDatasource extends LocalDatabaseDatasource {
   // Singleton: Para siempre usar la misma conexion
   static final LocalDbDatasource _instace = LocalDbDatasource._internal();
   factory LocalDbDatasource() => _instace;
@@ -36,6 +37,7 @@ class LocalDbDatasource {
   // --- Metodos CRUD ----
 
   // Create pelicula
+  @override
   Future<void> toggleFavorite(LocalMovie movie) async {
     final db = await database;
     // Verficamos si existe
@@ -60,6 +62,7 @@ class LocalDbDatasource {
   }
 
   // Leer si una pelicula es favorita
+  @override
   Future<bool> isFavorite(int movieId) async {
     final db = await database;
     final maps = await db.query(
@@ -70,9 +73,14 @@ class LocalDbDatasource {
     return maps.isNotEmpty;
   }
 
-  Future<List<LocalMovie>> loadFavorites() async {
+  @override
+  Future<List<LocalMovie>> loadFavorites({int limit = 10, offset = 0}) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('favorites');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'favorites',
+      limit: limit,
+      offset: offset,
+    );
 
     return List.generate(maps.length, (i) => LocalMovie.fromMap(maps[i]));
   }

@@ -1,33 +1,42 @@
-import 'package:cinema_pedia_app/infrastructure/datasources/local_db_datasource.dart';
+import 'package:cinema_pedia_app/domain/entities/movie.dart';
 import 'package:cinema_pedia_app/infrastructure/mappers/movie_database_mapper.dart';
 import 'package:cinema_pedia_app/infrastructure/models/moviedb/movie_details_moviedb.dart';
 import 'package:cinema_pedia_app/presentation/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:cinema_pedia_app/infrastructure/database/models/local_movie.dart';
+import 'package:cinema_pedia_app/infrastructure/models/database/models/local_movie.dart';
 
 class FavoritesMoviesNotifer extends Notifier<List<LocalMovie>> {
+  int _page = 0;
+  bool _isLoading = false;
+
   @override
   List<LocalMovie> build() {
     // Iniciamos vacíos, pero disparamos la carga inicial
-    loadFavorites();
+    loadNextPage();
     return [];
   }
 
   // Carga inicial y paginación
-  Future<List<LocalMovie>> loadFavorites() async {
-    final localDb = ref.read(localDbDatasourceProvider);
-    final movies = await localDb.loadFavorites();
+  Future<void> loadNextPage() async {
+    if (_isLoading) return;
+    _isLoading = true;
 
-    state = movies;
+    final localDb = ref.read(localDbRepositoryProvider);
 
-    return movies;
+    final movies = await localDb.loadFavorites(offset: _page * 10, limit: 10);
+
+    _page++;
+
+    state = [...state, ...movies];
+
+    _isLoading = false;
   }
 
-  Future<void> addToFavorites(MovieDbDetail movieDetail) async {
-    final localMovie = MovieDatabaseMapper.movieDetailsToEntity(movieDetail);
+  Future<void> addToFavorites(Movie movie) async {
+    final localMovie = MovieDatabaseMapper.movieDetailsToEntity(movie);
 
-    final localDb = ref.read(localDbDatasourceProvider);
+    final localDb = ref.read(localDbRepositoryProvider);
 
     await localDb.toggleFavorite(localMovie);
 
@@ -44,7 +53,7 @@ class FavoritesMoviesNotifer extends Notifier<List<LocalMovie>> {
   }
 
   Future<bool> isFavorite(int movieId) async {
-    final localDb = ref.read(localDbDatasourceProvider);
+    final localDb = ref.read(localDbRepositoryProvider);
 
     return localDb.isFavorite(movieId);
   }
