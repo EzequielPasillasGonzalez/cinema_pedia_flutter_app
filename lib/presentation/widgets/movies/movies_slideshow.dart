@@ -32,7 +32,7 @@ class _MoviesSlideshowState extends State<MoviesSlideshow> {
         SizedBox(
           height: 210,
           width: double.infinity,
-          child: CardSwiper(
+          child: CardSwiper(           
             cardBuilder:
                 (
                   context,

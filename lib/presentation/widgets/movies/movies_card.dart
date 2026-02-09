@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cinema_pedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MoviesCard extends StatelessWidget {
   final Movie movie;
@@ -21,20 +22,23 @@ class MoviesCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: DecoratedBox(
         decoration: decoration,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            movie.backdropPath,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress != null) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(color: colors.primary),
-                );
-              }
+        child: GestureDetector(
+          onTap: () => context.push('/movie/${movie.id}'),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              movie.backdropPath,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress != null) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(color: colors.primary),
+                  );
+                }
 
-              return FadeIn(child: child);
-            },
+                return FadeIn(child: child);
+              },
+            ),
           ),
         ),
       ),
