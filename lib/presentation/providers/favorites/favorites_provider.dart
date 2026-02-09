@@ -8,19 +8,19 @@ import 'package:cinema_pedia_app/infrastructure/models/database/models/local_mov
 
 class FavoritesMoviesNotifer extends Notifier<List<LocalMovie>> {
   int _page = 0;
-  bool _isLoading = false;
+  // bool _isLoading = false;
 
   @override
   List<LocalMovie> build() {
     // Iniciamos vacíos, pero disparamos la carga inicial
-    loadNextPage();
+    // loadNextPage();
     return [];
   }
 
   // Carga inicial y paginación
-  Future<void> loadNextPage() async {
-    if (_isLoading) return;
-    _isLoading = true;
+  Future<List<LocalMovie>> loadNextPage() async {
+    // if (_isLoading) return ;
+    // _isLoading = true;
 
     final localDb = ref.read(localDbRepositoryProvider);
 
@@ -30,7 +30,9 @@ class FavoritesMoviesNotifer extends Notifier<List<LocalMovie>> {
 
     state = [...state, ...movies];
 
-    _isLoading = false;
+    // _isLoading = false;
+
+    return movies;
   }
 
   Future<void> addToFavorites(Movie movie) async {
